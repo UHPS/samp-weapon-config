@@ -47,7 +47,7 @@
 
 // For modes that always have negative cash
 #if !defined WC_CUSTOM_VENDING_MACHINES
-	#define WC_CUSTOM_VENDING_MACHINES true
+	#define WC_CUSTOM_VENDING_MACHINES false
 #endif
 
 #if !defined WC_HEALTH_BAR_BG_COLOR
@@ -859,9 +859,9 @@ static s_ShotsFired[MAX_PLAYERS];
 static s_HitsIssued[MAX_PLAYERS];
 static s_MaxShootRateSamples = 3;
 static s_MaxHitRateSamples = 3;
-static Float:s_PlayerMaxHealth[MAX_PLAYERS] = {100.0, ...};
+static Float:s_PlayerMaxHealth[MAX_PLAYERS] = {99999.0, ...};
 static Float:s_PlayerHealth[MAX_PLAYERS] = {100.0, ...};
-static Float:s_PlayerMaxArmour[MAX_PLAYERS] = {100.0, ...};
+static Float:s_PlayerMaxArmour[MAX_PLAYERS] = {99999.0, ...};
 static Float:s_PlayerArmour[MAX_PLAYERS] = {0.0, ...};
 static s_LastSentHealth[MAX_PLAYERS];
 static s_LastSentArmour[MAX_PLAYERS];
@@ -939,6 +939,7 @@ static Float:s_DamageDoneArmour[MAX_PLAYERS];
 static s_DelayedDeathTimer[MAX_PLAYERS] = {-1, ...};
 static bool:s_VehicleAlive[MAX_VEHICLES] = {false, ...};
 static bool:s_EnableHealthBar[MAX_PLAYERS];
+static bool:s_EnableDamageLog[MAX_PLAYERS];
 static s_VehicleRespawnTimer[MAX_VEHICLES] = {-1, ...};
 
 native WC_IsValidVehicle(vehicleid) = IsValidVehicle;
@@ -2188,9 +2189,9 @@ public OnPlayerConnect(playerid)
 {
 	new tick = GetTickCount();
 
-	s_PlayerMaxHealth[playerid] = 100.0;
+	s_PlayerMaxHealth[playerid] = 99999.0;
 	s_PlayerHealth[playerid] = 100.0;
-	s_PlayerMaxArmour[playerid] = 100.0;
+	s_PlayerMaxArmour[playerid] = 99999.0;
 	s_PlayerArmour[playerid] = 0.0;
 	s_LastExplosive[playerid] = 0;
 	s_LastShotIdx[playerid] = 0;
@@ -2231,7 +2232,8 @@ public OnPlayerConnect(playerid)
 	s_DeathTimer[playerid] = -1;
 	s_DelayedDeathTimer[playerid] = -1;
 	s_DamageFeedPlayer[playerid] = -1;
-	s_EnableHealthBar[playerid] = true; //enable by default
+	s_EnableHealthBar[playerid] = false; //enable by default
+	s_EnableDamageLog[playerid] = false; //enable by default
 
 	for (new i = 0; i < sizeof(s_PreviousHits[]); i++) {
 		s_PreviousHits[playerid][i][e_Tick] = 0;
@@ -4112,7 +4114,7 @@ static UpdateHealthBar(playerid, bool:force = false)
 	if (health != s_LastSentHealth[playerid]) {
 		s_LastSentHealth[playerid] = health;
 
-		SetPlayerHealth(playerid, 8000000.0 + float(health));
+		SetPlayerHealth(playerid, 0.1 + float(health));
 
 		if (s_HealthBarVisible[playerid] && !s_IsDying[playerid]) {
 			if (s_HealthBarForeground[playerid] == PlayerText:INVALID_TEXT_DRAW) {
@@ -5182,6 +5184,9 @@ static DamageFeedUpdate(playerid, bool:modified = false)
 
 static DamageFeedUpdateText(playerid)
 {
+	if(s_EnableDamageLog[playerid] == false)
+		return false;
+	
 	new buf[64 * WC_FEED_HEIGHT] = "";
 
 	for (new i = 0; i < sizeof(s_DamageFeedHitsGiven[]) - 1; i++) {
@@ -5280,6 +5285,8 @@ static DamageFeedUpdateText(playerid)
 			PlayerTextDrawHide(playerid, s_DamageFeedTaken[playerid]);
 		}
 	}
+	
+	return true;
 }
 
 static DamageFeedAddHitGiven(playerid, issuerid, Float:amount, weapon)
