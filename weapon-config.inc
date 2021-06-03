@@ -859,9 +859,9 @@ static s_ShotsFired[MAX_PLAYERS];
 static s_HitsIssued[MAX_PLAYERS];
 static s_MaxShootRateSamples = 3;
 static s_MaxHitRateSamples = 3;
-static Float:s_PlayerMaxHealth[MAX_PLAYERS] = {99999.0, ...};
+static Float:s_PlayerMaxHealth[MAX_PLAYERS] = {2147483646.0, ...};
 static Float:s_PlayerHealth[MAX_PLAYERS] = {100.0, ...};
-static Float:s_PlayerMaxArmour[MAX_PLAYERS] = {99999.0, ...};
+static Float:s_PlayerMaxArmour[MAX_PLAYERS] = {2147483646.0, ...};
 static Float:s_PlayerArmour[MAX_PLAYERS] = {0.0, ...};
 static s_LastSentHealth[MAX_PLAYERS];
 static s_LastSentArmour[MAX_PLAYERS];
@@ -871,20 +871,20 @@ static s_IsDying[MAX_PLAYERS];
 static s_DeathTimer[MAX_PLAYERS] = {-1, ...};
 static bool:s_HealthBarVisible[MAX_PLAYERS];
 static bool:s_SpawnForStreamedIn[MAX_PLAYERS];
-static s_RespawnTime = 3000;
+static s_RespawnTime = 2000;
 static s_CustomFallDamage = false;
 static bool:s_CbugGlobal = true;
 static bool:s_CbugAllowed[MAX_PLAYERS] = true;
 static s_CbugFroze[MAX_PLAYERS];
-static s_DamageFeed = true;
+static s_DamageFeed = false;
 static s_DamageFeedPlayer[MAX_PLAYERS] = {-1, ...};
 static s_DamageFeedHideDelay = 3000;
 static s_DamageFeedMaxUpdateRate = 250;
 static s_VehiclePassengerDamage = false;
 static s_VehicleUnoccupiedDamage = false;
 static Float:s_FallDeathVelocity = -0.6;
-static s_DamageTakenSound = 1190;
-static s_DamageGivenSound = 17802;
+static s_DamageTakenSound = 0;
+static s_DamageGivenSound = 0;
 static s_RejectedHits[MAX_PLAYERS][WC_MAX_REJECTED_HITS][E_REJECTED_HIT];
 static s_RejectedHitsIdx[MAX_PLAYERS];
 static s_World[MAX_PLAYERS];
@@ -1233,7 +1233,7 @@ stock SetDamageFeedForPlayer(playerid, toggle = -1)
 	if (IsPlayerConnected(playerid))
 	{
 		s_DamageFeedPlayer[playerid] = toggle;
-		DamageFeedUpdate(playerid);
+		// DamageFeedUpdate(playerid);
 		return 1;
 	}
 
@@ -1494,7 +1494,7 @@ stock WC_SetPlayerHealth(playerid, Float:health, Float:armour = -1.0)
 			health = s_PlayerMaxHealth[playerid];
 		}
 		s_PlayerHealth[playerid] = health;
-		UpdateHealthBar(playerid, true);
+		//  UpdateHealthBar(playerid, true);
 	}
 
 	return 1;
@@ -1523,7 +1523,7 @@ stock WC_SetPlayerArmour(playerid, Float:armour)
 		armour = s_PlayerMaxArmour[playerid];
 	}
 	s_PlayerArmour[playerid] = armour;
-	UpdateHealthBar(playerid, true);
+	//  UpdateHealthBar(playerid, true);
 
 	return 1;
 }
@@ -2251,7 +2251,7 @@ public OnPlayerConnect(playerid)
 	SetPlayerTeam(playerid, s_PlayerTeam[playerid]);
 	FreezeSyncPacket(playerid, .toggle = false);
 	SetFakeFacingAngle(playerid, _);
-	DamageFeedUpdate(playerid);
+	// DamageFeedUpdate(playerid);
 
 	#if WC_CUSTOM_VENDING_MACHINES
 		if (!s_AlreadyConnected[playerid]) {
@@ -2363,7 +2363,7 @@ public OnPlayerSpawn(playerid)
 	if (s_BeingResynced[playerid]) {
 		s_BeingResynced[playerid] = false;
 
-		UpdateHealthBar(playerid);
+		//  UpdateHealthBar(playerid);
 
 		SetPlayerPos(playerid, s_SyncData[playerid][e_PosX], s_SyncData[playerid][e_PosY], s_SyncData[playerid][e_PosZ]);
 		SetPlayerFacingAngle(playerid, s_SyncData[playerid][e_PosA]);
@@ -2442,10 +2442,10 @@ public OnPlayerSpawn(playerid)
 	}
 
 	UpdatePlayerVirtualWorld(playerid);
-	UpdateHealthBar(playerid, true);
+	// UpdateHealthBar(playerid, true);
 	FreezeSyncPacket(playerid, .toggle = false);
 	SetFakeFacingAngle(playerid, _);
-	DamageFeedUpdate(playerid);
+	// DamageFeedUpdate(playerid);
 
 	if (GetPlayerTeam(playerid) != s_PlayerTeam[playerid]) {
 		SetPlayerTeam(playerid, s_PlayerTeam[playerid]);
@@ -2690,7 +2690,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 		}
 	}
 
-	UpdateHealthBar(playerid);
+	//  UpdateHealthBar(playerid);
 
 	return 1;
 }
@@ -3315,7 +3315,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 		return 0;
 	}
 
-	UpdateHealthBar(playerid, true);
+	//  UpdateHealthBar(playerid, true);
 
 	if (s_IsDying[playerid]) {
 		return 0;
@@ -3916,7 +3916,7 @@ static ScriptInit()
 		s_PlayerTeam[playerid] = GetPlayerTeam(playerid);
 
 		SetPlayerTeam(playerid, s_PlayerTeam[playerid]);
-		DamageFeedUpdate(playerid);
+		// DamageFeedUpdate(playerid);
 
 		new worldid = GetPlayerVirtualWorld(playerid);
 
@@ -3948,7 +3948,7 @@ static ScriptInit()
 				s_PlayerHealth[playerid] = s_PlayerMaxHealth[playerid];
 			}
 
-			UpdateHealthBar(playerid);
+			//  UpdateHealthBar(playerid);
 		}
 
 		switch (GetPlayerState(playerid)) {
@@ -4074,7 +4074,7 @@ static Float:WC_Bar_Calculate(Float:width, Float:max, Float:value) {
   return result;
 }
 
-static UpdateHealthBar(playerid, bool:force = false)
+static //  UpdateHealthBar(playerid, bool:force = false)
 {
 	if (s_BeingResynced[playerid] || s_ForceClassSelection[playerid]) {
 		return;
@@ -4120,12 +4120,12 @@ static UpdateHealthBar(playerid, bool:force = false)
 			if (s_HealthBarForeground[playerid] == PlayerText:INVALID_TEXT_DRAW) {
 
 				s_HealthBarForeground[playerid] = CreatePlayerTextDraw(
-					playerid, 
-					547.518310, 
-					68.083274, 
+					playerid,
+					547.518310,
+					68.083274,
 					"LD_SPAC:white"
 				);
-				PlayerTextDrawTextSize(playerid, 
+				PlayerTextDrawTextSize(playerid,
 					s_HealthBarForeground[playerid],
 					WC_Bar_Calculate(
 					60.000000,
@@ -4138,17 +4138,17 @@ static UpdateHealthBar(playerid, bool:force = false)
 					printf("(wc) WARN: Unable to create player healthbar foreground");
 				} else {
 					s_InternalPlayerTextDraw[playerid][s_HealthBarForeground[playerid]] = true;
-					
+
 					PlayerTextDrawAlignment(playerid, 		s_HealthBarForeground[playerid], 1);
 					PlayerTextDrawColor(playerid, 			s_HealthBarForeground[playerid], 0xB51821FF);
 					PlayerTextDrawSetShadow(playerid, 		s_HealthBarForeground[playerid], 0);
 					PlayerTextDrawBackgroundColor(playerid, s_HealthBarForeground[playerid], 255);
 					PlayerTextDrawFont(playerid, 			s_HealthBarForeground[playerid], 4);
 					PlayerTextDrawSetProportional(playerid, s_HealthBarForeground[playerid], 0);
-					PlayerTextDrawShow(playerid, 			s_HealthBarForeground[playerid]);			
+					PlayerTextDrawShow(playerid, 			s_HealthBarForeground[playerid]);
 				}
 			} else {
-				PlayerTextDrawTextSize(playerid, 
+				PlayerTextDrawTextSize(playerid,
 					s_HealthBarForeground[playerid],
 					WC_Bar_Calculate(
 					60.000000,
@@ -4186,14 +4186,14 @@ static SetHealthBarVisible(playerid, bool:toggle)
 
 	if (toggle) {
 		if (s_HealthBarBorder != Text:INVALID_TEXT_DRAW) {
-			TextDrawShowForPlayer(playerid, s_HealthBarBorder);
+			// TextDrawShowForPlayer(playerid, s_HealthBarBorder);
 		}
 
 		if (s_HealthBarBackground != Text:INVALID_TEXT_DRAW) {
-			TextDrawShowForPlayer(playerid, s_HealthBarBackground);
+			// TextDrawShowForPlayer(playerid, s_HealthBarBackground);
 		}
 
-		UpdateHealthBar(playerid, true);
+		//  UpdateHealthBar(playerid, true);
 	} else {
 		if (s_HealthBarForeground[playerid] != PlayerText:INVALID_TEXT_DRAW) {
 			PlayerTextDrawHide(playerid, s_HealthBarForeground[playerid]);
@@ -4733,7 +4733,7 @@ static InflictDamage(playerid, Float:amount, issuerid = INVALID_PLAYER_ID, weapo
 	}
 
 	if (!OnPlayerDamage(playerid, amount, issuerid, weaponid, bodypart)) {
-		UpdateHealthBar(playerid);
+		//  UpdateHealthBar(playerid);
 
 		if (weaponid < 0 || weaponid > WEAPON_UNKNOWN) {
 			weaponid = WEAPON_UNKNOWN;
@@ -4911,7 +4911,7 @@ static InflictDamage(playerid, Float:amount, issuerid = INVALID_PLAYER_ID, weapo
 		}
 	}
 
-	UpdateHealthBar(playerid);
+	//  UpdateHealthBar(playerid);
 }
 
 forward WC_DelayedDeath(playerid, issuerid, reason);
@@ -4947,7 +4947,7 @@ static PlayerDeath(playerid, animlib[32], animname[32], anim_lock = 0, respawn_t
 
 	OnPlayerPrepareDeath(playerid, animlib, animname, anim_lock, respawn_time);
 
-	UpdateHealthBar(playerid);
+	//  UpdateHealthBar(playerid);
 	FreezeSyncPacket(playerid, .toggle = freeze_sync);
 
 	if (respawn_time == -1) {
@@ -5048,7 +5048,7 @@ public OnPlayerDeathFinished(playerid, bool:cancelable)
 	}
 #endif
 
-forward WC_DamageFeedUpdate(playerid);
+forward WC_// DamageFeedUpdate(playerid);
 public WC_DamageFeedUpdate(playerid)
 {
 	s_DamageFeedTimer[playerid] = -1;
@@ -5186,7 +5186,7 @@ static DamageFeedUpdateText(playerid)
 {
 	if(s_EnableDamageLog[playerid] == false)
 		return false;
-	
+
 	new buf[64 * WC_FEED_HEIGHT] = "";
 
 	for (new i = 0; i < sizeof(s_DamageFeedHitsGiven[]) - 1; i++) {
@@ -5285,7 +5285,7 @@ static DamageFeedUpdateText(playerid)
 			PlayerTextDrawHide(playerid, s_DamageFeedTaken[playerid]);
 		}
 	}
-	
+
 	return true;
 }
 
@@ -5503,7 +5503,7 @@ public WC_PlayerDeathRespawn(playerid)
 	s_IsDying[playerid] = false;
 
 	if (!OnPlayerDeathFinished(playerid, true)) {
-		UpdateHealthBar(playerid);
+		//  UpdateHealthBar(playerid);
 		SetFakeFacingAngle(playerid, _);
 		FreezeSyncPacket(playerid, .toggle = false);
 
