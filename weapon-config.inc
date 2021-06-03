@@ -1085,7 +1085,7 @@ stock EnableHealthBarForPlayer(playerid, bool:enable)
 		s_EnableHealthBar[playerid] = enable;
 		SetHealthBarVisible(playerid, enable);
 		#if WC_DEBUG
-		DebugMessage(playerid, "health bar is %s for player", (s_EnableHealthBar[playerid]) ? ("enabled") : ("disabled"));
+//		DebugMessage(playerid, "health bar is %s for player", (s_EnableHealthBar[playerid]) ? ("enabled") : ("disabled"));
 		#endif
 		return true;
 	}
@@ -2348,7 +2348,7 @@ public OnPlayerSpawn(playerid)
 	s_InClassSelection[playerid] = false;
 
 	if (s_ForceClassSelection[playerid]) {
-		DebugMessage(playerid, "Being forced into class selection");
+//		DebugMessage(playerid, "Being forced into class selection");
 		ForceClassSelection(playerid);
 		SetPlayerHealth(playerid, 0.0);
 		SetPlayerVirtualWorld(playerid, WC_DEATH_WORLD);
@@ -2454,7 +2454,7 @@ public OnPlayerSpawn(playerid)
 	new animlib[32], animname[32];
 
 	if (s_DeathSkip[playerid] == 2) {
-		DebugMessage(playerid, "Death skipped");
+//		DebugMessage(playerid, "Death skipped");
 		SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
 		GivePlayerWeapon(playerid, 0, 1);
 		SetPlayerArmedWeapon(playerid, 0);
@@ -2485,10 +2485,10 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerRequestClass(playerid, classid)
 {
-	DebugMessage(playerid, "Requested class: %d", classid);
+//	DebugMessage(playerid, "Requested class: %d", classid);
 
 	if (s_DeathSkip[playerid]) {
-		DebugMessage(playerid, "Skipping death - class selection skipped");
+//		DebugMessage(playerid, "Skipping death - class selection skipped");
 		SpawnPlayer(playerid);
 
 		return 0;
@@ -2521,7 +2521,7 @@ public OnPlayerRequestClass(playerid, classid)
 
 	if (s_TrueDeath[playerid]) {
 		if (!s_InClassSelection[playerid]) {
-			DebugMessage(playerid, "True death class selection");
+//			DebugMessage(playerid, "True death class selection");
 
 			new Float:x, Float:y, Float:z;
 			GetPlayerPos(playerid, x, y, z);
@@ -2540,7 +2540,7 @@ public OnPlayerRequestClass(playerid, classid)
 			return 0;
 		}
 	} else {
-		DebugMessage(playerid, "Not true death - being respawned");
+//		DebugMessage(playerid, "Not true death - being respawned");
 
 		s_ForceClassSelection[playerid] = true;
 
@@ -2571,14 +2571,14 @@ public OnPlayerDeath(playerid, killerid, reason)
 		killerid = INVALID_PLAYER_ID;
 	}
 
-	DebugMessageRedAll("OnPlayerDeath(%d died by %d from %d)", playerid, reason, killerid);
+//	DebugMessageRedAll("OnPlayerDeath(%d died by %d from %d)", playerid, reason, killerid);
 
 	if (s_DeathTimer[playerid] != -1) {
 		KillTimer(s_DeathTimer[playerid]);
 	}
 
 	if (s_IsDying[playerid]) {
-		DebugMessageRedAll("death while dying %d", playerid);
+//		DebugMessageRedAll("death while dying %d", playerid);
 
 		return 1;
 	}
@@ -2970,7 +2970,7 @@ public OnPlayerUpdate(playerid)
 
 				WC_DeathSkipEnd(playerid);
 
-				DebugMessage(playerid, "Death skip end");
+//				DebugMessage(playerid, "Death skip end");
 			}
 		}
 	}
@@ -3022,7 +3022,7 @@ public OnPlayerUpdate(playerid)
 
 			if (((prev == 1130 && vz == 0.0) || 1128 <= anim <= 1134 || anim == 1208)) {
 				new Float:amount = -1.0;
-				DebugMessage(playerid, "vz: %f anim: %d prev: %d", vz, anim, prev);
+//				DebugMessage(playerid, "vz: %f anim: %d prev: %d", vz, anim, prev);
 
 				vz = s_LastZVelo[playerid];
 
@@ -3042,7 +3042,7 @@ public OnPlayerUpdate(playerid)
 				}
 
 				if (amount >= 0.0) {
-					DebugMessage(playerid, "fall dmg: %.5f (vz: %f, anim: %d, prev: %d)", amount, vz, anim, prev);
+//					DebugMessage(playerid, "fall dmg: %.5f (vz: %f, anim: %d, prev: %d)", amount, vz, anim, prev);
 
 					InflictDamage(playerid, amount, INVALID_PLAYER_ID, WEAPON_COLLISION, 3);
 				}
@@ -3056,7 +3056,7 @@ public OnPlayerUpdate(playerid)
 public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 {
 	if (!IsHighRateWeapon(weaponid)) {
-		DebugMessage(playerid, "OnPlayerGiveDamage(%d gave %f to %d using %d on bodypart %d)", playerid, amount, damagedid, weaponid, bodypart);
+//		DebugMessage(playerid, "OnPlayerGiveDamage(%d gave %f to %d using %d on bodypart %d)", playerid, amount, damagedid, weaponid, bodypart);
 	}
 
 	// Nobody got damaged
@@ -3160,8 +3160,8 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 
 			WC_OnPlayerDeath(damagedid, playerid, weaponid);
 
-			DebugMessage(damagedid, "being knifed by %d", playerid);
-			DebugMessage(playerid, "knifing %d", damagedid);
+//			DebugMessage(damagedid, "being knifed by %d", playerid);
+//			DebugMessage(playerid, "knifing %d", damagedid);
 
 			new Float:x, Float:y, Float:z, Float:a;
 
@@ -3175,7 +3175,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 			new forcesync = 2;
 
 			if (747 < GetPlayerAnimationIndex(playerid) > 748) {
-				DebugMessageRed(playerid, "applying knife anim for you too (current: %d)", GetPlayerAnimationIndex(playerid));
+//				DebugMessageRed(playerid, "applying knife anim for you too (current: %d)", GetPlayerAnimationIndex(playerid));
 
 				forcesync = 1;
 			}
@@ -3235,7 +3235,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 
 			new prev_tick = s_LastHitTicks[playerid][prev_tick_idx];
 
-			DebugMessage(playerid, "(hit) last: %d last 3: %d", tick - prev_tick, AverageHitRate(playerid, 3));
+//			DebugMessage(playerid, "(hit) last: %d last 3: %d", tick - prev_tick, AverageHitRate(playerid, 3));
 		}
 	#endif
 
@@ -3262,7 +3262,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 		if (!s_LastShot[playerid][e_Valid]) {
 			valid = false;
 			//AddRejectedHit(playerid, damagedid, HIT_LAST_SHOT_INVALID, weaponid);
-			DebugMessageRed(playerid, "last shot not valid");
+//			DebugMessageRed(playerid, "last shot not valid");
 		} else if (WEAPON_SHOTGUN <= weaponid <= WEAPON_SHOTGSPA) {
 			// Let's assume someone won't hit 2 players with 1 shotgun shot, and that one OnPlayerWeaponShot can be out of sync
 			if (s_LastShot[playerid][e_Hits] >= 2) {
@@ -3275,7 +3275,7 @@ public OnPlayerGiveDamage(playerid, damagedid, Float:amount, weaponid, bodypart)
 				valid = false;
 				AddRejectedHit(playerid, damagedid, HIT_MULTIPLE_PLAYERS, weaponid, s_LastShot[playerid][e_Hits] + 1);
 			} else {
-				DebugMessageRed(playerid, "hit %d players with 1 shot", s_LastShot[playerid][e_Hits] + 1);
+//				DebugMessageRed(playerid, "hit %d players with 1 shot", s_LastShot[playerid][e_Hits] + 1);
 			}
 		}
 
@@ -3330,7 +3330,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	}
 
 	if (!IsHighRateWeapon(weaponid)) {
-		DebugMessage(playerid, "OnPlayerTakeDamage(%d took %f from %d by %d on bodypart %d)", playerid, amount, issuerid, weaponid, bodypart);
+//		DebugMessage(playerid, "OnPlayerTakeDamage(%d took %f from %d by %d on bodypart %d)", playerid, amount, issuerid, weaponid, bodypart);
 	}
 
 	// Ignore unreliable and invalid damage
@@ -3357,7 +3357,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 		new anim = GetPlayerAnimationIndex(playerid);
 
 		if (1061 <= anim <= 1067) {
-			DebugMessage(playerid, "climb bug prevented");
+//			DebugMessage(playerid, "climb bug prevented");
 			return 0;
 		}
 	}
@@ -3400,8 +3400,8 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 
 			SetPlayerHealth(playerid, Float:0x7f7fffff);
 
-			DebugMessage(playerid, "being knifed by %d", issuerid);
-			DebugMessage(issuerid, "knifing %d", playerid);
+//			DebugMessage(playerid, "being knifed by %d", issuerid);
+//			DebugMessage(issuerid, "knifing %d", playerid);
 
 			new Float:x, Float:y, Float:z, Float:a;
 
@@ -3415,7 +3415,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 			new forcesync = 2;
 
 			if (GetPlayerAnimationIndex(issuerid) != 747) {
-				DebugMessageRed(issuerid, "applying knife anim for you too (current: %d)", GetPlayerAnimationIndex(issuerid));
+//				DebugMessageRed(issuerid, "applying knife anim for you too (current: %d)", GetPlayerAnimationIndex(issuerid));
 
 				forcesync = 1;
 			}
@@ -3443,7 +3443,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 		}
 
 		if (s_IsDying[issuerid] && (IsBulletWeapon(weaponid) || IsMeleeWeapon(weaponid)) && GetTickCount() - s_LastDeathTick[issuerid] > 80) {
-			DebugMessageRed(playerid, "shot/punched by dead player (%d)", issuerid);
+//			DebugMessageRed(playerid, "shot/punched by dead player (%d)", issuerid);
 			return 0;
 		}
 
@@ -3537,11 +3537,11 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 
 	#if WC_DEBUG
 		if (hittype == BULLET_HIT_TYPE_PLAYER) {
-			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot %d with %d at %f, %f, %f)", playerid, hitid, weaponid, fX, fY, fZ);
+//			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot %d with %d at %f, %f, %f)", playerid, hitid, weaponid, fX, fY, fZ);
 		} else if (hittype) {
-			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot %d %d with %d at %f, %f, %f)", playerid, hittype, hitid, weaponid, fX, fY, fZ);
+//			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot %d %d with %d at %f, %f, %f)", playerid, hittype, hitid, weaponid, fX, fY, fZ);
 		} else {
-			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot with %d at %f, %f, %f)", playerid, weaponid, fX, fY, fZ);
+//			DebugMessage(playerid, "OnPlayerWeaponShot(%d shot with %d at %f, %f, %f)", playerid, weaponid, fX, fY, fZ);
 		}
 	#endif
 
@@ -3634,7 +3634,7 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 
 			new prev_tick = s_LastShotTicks[playerid][prev_tick_idx];
 
-			DebugMessage(playerid, "(shot) last: %d last 3: %d", tick - prev_tick, AverageShootRate(playerid, 3));
+//			DebugMessage(playerid, "(shot) last: %d last 3: %d", tick - prev_tick, AverageShootRate(playerid, 3));
 		}
 	#endif
 
@@ -4539,7 +4539,7 @@ static ProcessDamage(&playerid, &issuerid, &Float:amount, &weaponid, &bodypart, 
 			     5.280000209808349609375: {
 				// Damage is most likely from punching and switching weapon quickly
 				if (!melee) {
-					DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
+//					DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
 					weaponid = WEAPON_UNARMED;
 					melee = true;
 				}
@@ -4552,7 +4552,7 @@ static ProcessDamage(&playerid, &issuerid, &Float:amount, &weaponid, &bodypart, 
 						     WEAPON_SHOTGUN, WEAPON_SAWEDOFF: {}
 
 						default: {
-							DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
+//							DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
 							weaponid = WEAPON_UNARMED;
 							melee = true;
 						}
@@ -4562,7 +4562,7 @@ static ProcessDamage(&playerid, &issuerid, &Float:amount, &weaponid, &bodypart, 
 
 			case 54.12000274658203125: {
 				if (!melee) {
-					DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
+//					DebugMessage(issuerid, "weapon changed from %d to melee (punch & swap)", weaponid);
 					melee = true;
 					weaponid = WEAPON_UNARMED;
 					amount = 1.32000005245208740234375;
@@ -4749,7 +4749,7 @@ static InflictDamage(playerid, Float:amount, issuerid = INVALID_PLAYER_ID, weapo
 			}
 
 			if (!IsHighRateWeapon(weaponid)) {
-				DebugMessageAll("!InflictDamage(%d, %.4f, %d, %d, %d) length = %f", playerid, amount, issuerid, weaponid, bodypart, length);
+//				DebugMessageAll("!InflictDamage(%d, %.4f, %d, %d, %d) length = %f", playerid, amount, issuerid, weaponid, bodypart, length);
 			}
 		#endif
 
@@ -4770,7 +4770,7 @@ static InflictDamage(playerid, Float:amount, issuerid = INVALID_PLAYER_ID, weapo
 		}
 
 		if (!IsHighRateWeapon(weaponid)) {
-			DebugMessageAll("InflictDamage(%d, %.4f, %d, %d, %d) length = %f", playerid, amount, issuerid, weaponid, bodypart, length);
+//			DebugMessageAll("InflictDamage(%d, %.4f, %d, %d, %d) length = %f", playerid, amount, issuerid, weaponid, bodypart, length);
 		}
 	#endif
 
@@ -4996,7 +4996,7 @@ public OnRejectedHit(playerid, hit[E_REJECTED_HIT])
 
 		format(output, sizeof(output), output, i1, i2, i3);
 
-		DebugMessageRed(playerid, "Rejected hit: %s", output);
+//		DebugMessageRed(playerid, "Rejected hit: %s", output);
 	#endif
 
 	WC_OnRejectedHit(playerid, hit);
@@ -5527,7 +5527,7 @@ public WC_PlayerDeathRespawn(playerid)
 
 public OnInvalidWeaponDamage(playerid, damagedid, Float:amount, weaponid, bodypart, error, bool:given)
 {
-	DebugMessageRedAll("OnInvalidWeaponDamage(%d, %d, %f, %d, %d, %d, %d)", playerid, damagedid, amount, weaponid, bodypart, error, given);
+//	DebugMessageRedAll("OnInvalidWeaponDamage(%d, %d, %f, %d, %d, %d, %d)", playerid, damagedid, amount, weaponid, bodypart, error, given);
 
 	WC_OnInvalidWeaponDamage(playerid, damagedid, Float:amount, weaponid, bodypart, error, bool:given);
 }
@@ -5552,7 +5552,7 @@ public OnPlayerDamageDone(playerid, Float:amount, issuerid, weapon, bodypart)
 	s_PreviousHits[playerid][idx][e_Armour] = GetLastDamageArmour(playerid);
 
 	if (!IsHighRateWeapon(weapon)) {
-		DebugMessageAll("OnPlayerDamageDone(%d did %f to %d with %d on bodypart %d)", issuerid, amount, playerid, weapon, bodypart);
+//		DebugMessageAll("OnPlayerDamageDone(%d did %f to %d with %d on bodypart %d)", issuerid, amount, playerid, weapon, bodypart);
 
 		if (s_DamageTakenSound) {
 			PlayerPlaySound(playerid, s_DamageTakenSound, 0.0, 0.0, 0.0);
